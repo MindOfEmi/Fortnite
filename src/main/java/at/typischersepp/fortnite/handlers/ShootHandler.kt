@@ -1,55 +1,46 @@
-package at.typischersepp.fortnite.handlers;
+package at.typischersepp.fortnite.handlers
 
-import at.typischersepp.fortnite.Fortnite;
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.persistence.PersistentDataType;
+import at.typischersepp.fortnite.Fortnite
+import org.bukkit.Bukkit
+import org.bukkit.NamespacedKey
+import org.bukkit.entity.EntityType
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.persistence.PersistentDataType
+import java.util.*
 
-import java.util.Random;
-
-public class ShootHandler implements Listener {
-    Fortnite plugin;
-
-    public ShootHandler(Fortnite plugin) {
-        this.plugin = plugin;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+class ShootHandler(private var plugin: Fortnite) : Listener {
+    init {
+        Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
     @EventHandler
-    public void onLeftClick(PlayerInteractEvent event) {
-        if (!event.getAction().isLeftClick()) return;
+    fun onLeftClick(event: PlayerInteractEvent) {
+        if (!event.action.isLeftClick) return
 
-        event.setCancelled(true);
+        event.isCancelled = true
 
-        Player player = event.getPlayer();
-        PlayerInventory inventory = player.getInventory();
+        val player = event.player
+        val inventory = player.inventory
 
-        ItemStack gun = inventory.getItemInMainHand();
-        NamespacedKey key = new NamespacedKey(plugin, "ammo");
-        ItemMeta itemMeta = gun.getItemMeta();
-        Integer ammo = itemMeta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
-        if (ammo == null || ammo == 0) return;
+        val gun = inventory.itemInMainHand
+        val key = NamespacedKey(plugin, "ammo")
+        val itemMeta = gun.itemMeta
+        val ammo = itemMeta.persistentDataContainer.get(key, PersistentDataType.INTEGER)
+        if (ammo == null || ammo == 0) return
 
-        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, ammo - 1);
-        gun.setItemMeta(itemMeta);
+        itemMeta.persistentDataContainer.set(key, PersistentDataType.INTEGER, ammo - 1)
+        gun.setItemMeta(itemMeta)
 
-        player.setLevel(ammo - 1);
+        player.level = ammo - 1
 
-        Entity projectile = player.getWorld().spawnEntity(player.getEyeLocation(), EntityType.ARROW);
+        val projectile = player.world.spawnEntity(player.eyeLocation, EntityType.ARROW)
 
-        Random random = new Random();
+        val random = Random()
 
-        projectile.setMetadata("damage", new FixedMetadataValue(plugin, random.nextInt(100)));
-        projectile.setVelocity(player.getLocation().getDirection().multiply(1000));
+        projectile.setMetadata("damage", FixedMetadataValue(plugin, random.nextInt(100)))
+        projectile.velocity = player.location.direction.multiply(1000)
     }
 }

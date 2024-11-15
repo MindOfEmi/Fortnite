@@ -1,24 +1,23 @@
-package at.typischersepp.fortnite;
+package at.typischersepp.fortnite
 
-import at.typischersepp.fortnite.handlers.HitHandler;
-import at.typischersepp.fortnite.handlers.ShootHandler;
-import at.typischersepp.fortnite.handlers.TMP;
-import org.bukkit.plugin.java.JavaPlugin;
+import at.typischersepp.fortnite.handlers.HitHandler
+import at.typischersepp.fortnite.handlers.ReloadHandler
+import at.typischersepp.fortnite.handlers.ShootHandler
+import at.typischersepp.fortnite.handlers.TMP
+import org.bukkit.plugin.java.JavaPlugin
 
-public final class Fortnite extends JavaPlugin {
-
-    @Override
-    public void onEnable() {
+class Fortnite : JavaPlugin() {
+    override fun onEnable() {
         // Plugin startup logic
-        getLogger().info("Hello World!");
+        logger.info("Hello World!")
 
-        new ShootHandler(this);
-        new HitHandler(this);
-        new TMP(this);
+        ShootHandler(this)
+        HitHandler(this)
+        ReloadHandler(this)
+        TMP(this)
     }
 
-    @Override
-    public void onDisable() {
+    override fun onDisable() {
         // Plugin shutdown logic
     }
 }
