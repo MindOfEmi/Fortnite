@@ -1,16 +1,19 @@
 package at.typischersepp.fortnite.handlers;
 
 import at.typischersepp.fortnite.Fortnite;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Random;
 
@@ -24,14 +27,23 @@ public class ShootHandler implements Listener {
 
     @EventHandler
     public void onLeftClick(PlayerInteractEvent event) {
-        if (!event.getAction().isLeftClick() ||
-                !event.getPlayer().getInventory().getItemInMainHand().hasItemMeta() ||
-                !event.getPlayer().getInventory().getItemInMainHand().getItemMeta().hasCustomModelData()) return;
+        if (!event.getAction().isLeftClick()) return;
 
         event.setCancelled(true);
 
         Player player = event.getPlayer();
         PlayerInventory inventory = player.getInventory();
+
+        ItemStack gun = inventory.getItemInMainHand();
+        NamespacedKey key = new NamespacedKey(plugin, "ammo");
+        ItemMeta itemMeta = gun.getItemMeta();
+        Integer ammo = itemMeta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+        if (ammo == null || ammo == 0) return;
+
+        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, ammo - 1);
+        gun.setItemMeta(itemMeta);
+
+        player.setLevel(ammo - 1);
 
         Entity projectile = player.getWorld().spawnEntity(player.getEyeLocation(), EntityType.ARROW);
 
@@ -39,7 +51,5 @@ public class ShootHandler implements Listener {
 
         projectile.setMetadata("damage", new FixedMetadataValue(plugin, random.nextInt(100)));
         projectile.setVelocity(player.getLocation().getDirection().multiply(1000));
-
-        Bukkit.broadcast(Component.text(inventory.getItemInMainHand().getItemMeta().getCustomModelData()));
     }
 }

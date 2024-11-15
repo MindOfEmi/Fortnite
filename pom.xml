@@ -59,6 +59,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -67,6 +71,11 @@
             <artifactId>paper-api</artifactId>
             <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bananapuncher714</groupId>
+            <artifactId>nbteditor</artifactId>
+            <version>7.19.5</version>
         </dependency>
     </dependencies>
 </project>
