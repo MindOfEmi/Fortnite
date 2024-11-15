@@ -1,6 +1,7 @@
 package at.typischersepp.fortnite.handlers
 
 import at.typischersepp.fortnite.Fortnite
+import at.typischersepp.fortnite.utils.setMetadata
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -10,23 +11,24 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
-class TMP(var plugin: Fortnite) : Listener {
+class TMP(private var plugin: Fortnite) : Listener {
+    // Initialize Handler
     init {
         Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
+        // Initialize variables for better understanding
         val player = event.player
-
         val gun = ItemStack(Material.STICK)
-        val key = NamespacedKey(plugin, "ammo")
-        val itemMeta = gun.itemMeta
-        itemMeta.persistentDataContainer.set(key, PersistentDataType.INTEGER, 20)
-        itemMeta.persistentDataContainer.set(NamespacedKey(plugin, "ammoCapacity"), PersistentDataType.INTEGER, 20)
 
-        gun.setItemMeta(itemMeta)
+        // Set metadata to gun
+        setMetadata(gun, NamespacedKey(plugin, "ammo"), PersistentDataType.INTEGER, 20)
+        setMetadata(gun, NamespacedKey(plugin, "ammoCapacity"), PersistentDataType.INTEGER, 20)
+        setMetadata(gun, NamespacedKey(plugin, "damage"), PersistentDataType.INTEGER, 20)
 
+        // Give player gun
         player.inventory.setItemInMainHand(gun)
     }
 }
