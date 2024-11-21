@@ -2,3 +2,4 @@ name: Fortnite
 version: '1.0-SNAPSHOT'
 main: at.typischersepp.fortnite.Fortnite
 api-version: '1.20'
+depend: [ProtocolLib]
